@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">tracerBullet</string>
+    <string name="server_client_id">883190983348-bt17sg1vigsk66vdi6jk2ub2idl921tt.apps.googleusercontent.com</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="default_notification_channel_id">testing_channel</string>
+    <string name="fcm_message">[학사안내] 성적이 입력되었으니,포탈(HYIN) 확인 바랍니다.</string>
+</resources>
