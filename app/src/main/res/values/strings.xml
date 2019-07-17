@@ -5,4 +5,14 @@
     <string name="main_activity_title">내 일정</string>
     <string name="create_schedule_activity_title">새 일정 만들기</string>
 
+    <string name="share_btn_name">Share</string>
+    <string name="cal_btn_name">Calendar</string>
+    <string name="pick_chooser_title">Pick media to share</string>
+    <string name="share_chooser_title">Share these media with</string>
+    <string name="nothing_selected_msg">Nothing has been selected.</string>
+    <array name="licenses">
+        <item>Glide: https://github.com/bumptech/glide/blob/master/LICENSE</item>
+        <item>FishBun: https://github.com/sangcomz/FishBun#license</item>
+    </array>
+
 </resources>
