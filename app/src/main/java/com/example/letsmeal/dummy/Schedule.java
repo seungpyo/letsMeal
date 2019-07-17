@@ -1,6 +1,4 @@
-package com.example.letsmeal;
-
-import android.content.Context;
+package com.example.letsmeal.dummy;
 
 import java.io.Serializable;
 import java.util.ArrayList;

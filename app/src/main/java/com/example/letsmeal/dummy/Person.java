@@ -1,4 +1,4 @@
-package com.example.letsmeal;
+package com.example.letsmeal.dummy;
 
 import java.util.ArrayList;
 

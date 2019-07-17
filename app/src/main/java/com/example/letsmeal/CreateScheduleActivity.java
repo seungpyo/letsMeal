@@ -17,6 +17,9 @@ import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.letsmeal.dummy.Person;
+import com.example.letsmeal.dummy.Schedule;
+
 import java.util.Calendar;
 
 public class CreateScheduleActivity extends AppCompatActivity {
