@@ -1,6 +1,6 @@
 package com.example.letsmeal;
 
-import android.util.Log;
+import com.example.letsmeal.dummy.Schedule;
 
 import java.util.Calendar;
 
