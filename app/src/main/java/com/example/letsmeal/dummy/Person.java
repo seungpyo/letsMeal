@@ -4,15 +4,15 @@ import java.util.ArrayList;
 
 public class Person {
 
-    long id;
-    String name;
-    String profileImage;
-    String phoneNum;
-    String email;
-    String encryptedPasswd;
-    ArrayList<Schedule> schedules;
+    public long id;
+    public String name;
+    public String profileImage;
+    public String phoneNum;
+    public String email;
+    public String encryptedPasswd;
+    public ArrayList<Schedule> schedules;
 
-    Person(String name) {
+    public Person(String name) {
         this.name = name;
     }
 
