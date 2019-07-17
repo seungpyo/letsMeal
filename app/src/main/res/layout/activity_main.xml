@@ -9,22 +9,25 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:scrollbars="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addItemFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="160dp"
         android:layout_marginRight="15sp"
+        android:layout_marginBottom="160dp"
+        android:backgroundTint="@color/design_default_color_primary_dark"
+        android:foreground="@android:drawable/ic_menu_add"
+        android:tint="#00FFFFFF"
         android:visibility="visible"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:backgroundTint="#ffffff"
         app:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:pressedTranslationZ="12dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

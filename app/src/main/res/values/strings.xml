@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">letsMeal</string>
+    <string name="schedule_no_description">일정 설명이 없습니다.</string>
+    <string name="no_such_person_name"> 님은 등록되지 않은 사용자입니다.</string>
+    <string name="main_activity_title">내 일정</string>
+    <string name="create_schedule_activity_title">새 일정 만들기</string>
+
 </resources>

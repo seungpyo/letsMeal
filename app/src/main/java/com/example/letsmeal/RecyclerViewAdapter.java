@@ -2,20 +2,17 @@ package com.example.letsmeal;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,7 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public RecyclerViewAdapter(Context context, int item_layout) {
         this.context = context;
-        this.items = new ArrayList<ItemCard>();
+        this.items = new ArrayList<>();
         this.item_layout = item_layout;
     }
 
@@ -56,13 +53,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final ItemCard item=items.get(position);
         /*
         Drawable drawable=context.getResources().getDrawable(item.getImage());
         holder.image.setBackground(drawable);
         */
         holder.title.setText(item.getTitle());
+        holder.date.setText(item.getDate());
+        holder.time.setText(item.getTime());
+        holder.place.setText(item.getPlace());
+        holder.participants.setText(item.getParticipants());
+        holder.description.setText(item.getDescription());
+
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,23 +80,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView image;
         TextView title;
+        TextView date;
+        TextView time;
+        TextView place;
+        TextView participants;
+        TextView description;
         CardView cardview;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            image=(ImageView)itemView.findViewById(R.id.image);
-            title=(TextView)itemView.findViewById(R.id.title);
-            cardview=(CardView)itemView.findViewById(R.id.cardview);
+            title = itemView.findViewById(R.id.title);
+            date = itemView.findViewById(R.id.date);
+            time = itemView.findViewById(R.id.time);
+            place = itemView.findViewById(R.id.place);
+            participants = itemView.findViewById(R.id.participants);
+            description = itemView.findViewById(R.id.description);
+            cardview = itemView.findViewById(R.id.cardview);
         }
     }
 
     public void addItemCard(ItemCard card) {
         if (items == null) {
-            items = new ArrayList<ItemCard>();
+            items = new ArrayList<>();
         }
         items.add(card);
-        notifyItemInserted(getItemCount()-1);
+        Collections.sort(items, Collections.<ItemCard>reverseOrder());
+        int pos = items.indexOf(card);
+        assert (pos != -1);
+        notifyItemInserted(pos);
+        // notifyItemInserted(getItemCount()-1);
     }
 }
