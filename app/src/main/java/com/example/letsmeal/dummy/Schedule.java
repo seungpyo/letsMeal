@@ -8,26 +8,26 @@ import java.util.Locale;
 
 public class Schedule implements Serializable {
 
-    long id;
-    long organizerId;
-    String title;
-    Calendar calendar;
+    public long id;
+    public long organizerId;
+    public String title;
+    public Calendar calendar;
 
     /**
      * These two coordinates should be written in GeoPoint for Firebase
      */
-    double latitude;
-    double longitude;
-    String place;
+    public double latitude;
+    public double longitude;
+    public String place;
 
     /**
      * We store participants as a list of Person.ID.
      */
-    String participantsAsString;
-    ArrayList<Long> participants;
-    HashMap<Long, Boolean> participates;
+    public String participantsAsString;
+    public ArrayList<Long> participants;
+    public HashMap<Long, Boolean> participates;
 
-    String description;
+    public String description;
 
     /**
      * TODO:  Media fields.
