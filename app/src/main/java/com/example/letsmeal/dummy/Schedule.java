@@ -33,7 +33,7 @@ public class Schedule implements Serializable {
      * TODO:  Media fields.
      */
 
-    Schedule(long organizerId) {
+    public Schedule(long organizerId) {
         this.organizerId = organizerId;
         this.calendar = Calendar.getInstance();
         this.description = "";
