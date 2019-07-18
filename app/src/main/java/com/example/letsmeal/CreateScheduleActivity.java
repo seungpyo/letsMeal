@@ -43,7 +43,9 @@ public class CreateScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_schedule);
 
-        this.schedule = (Schedule) getIntent().getSerializableExtra("schedule");
+        // this.schedule = (Schedule) getIntent().getSerializableExtra("schedule");
+        String organizerUid = getIntent().getStringExtra("organizerUid");
+        this.schedule = new Schedule(organizerUid);
         this.dateCalendar = Calendar.getInstance();
         this.timeCalendar = Calendar.getInstance();
 

@@ -70,7 +70,10 @@ public class SplashActivity extends Activity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 editor.putBoolean("signInRequired", false);
                 editor.commit();
-                startActivity(new Intent(this, MainActivity.class));
+
+                Intent mainActivityIntent = new Intent(this, MainActivity.class);
+                mainActivityIntent.putExtra("uid", user.getUid());
+                startActivity(mainActivityIntent);
                 finish();
             } else {
                 // User canceled the sign-in flow using the back button.

@@ -10,13 +10,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.letsmeal.dummy.Schedule;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.Calendar;
 
@@ -28,10 +28,17 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
 
+    /**
+     * A FireBase UID to identify user.
+     */
+    private String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        uid = getIntent().getStringExtra("uid");
 
         recyclerView = findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -45,11 +52,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent createScheduleIntent = new Intent(MainActivity.this, CreateScheduleActivity.class);
-                Schedule schedule = new Schedule(getMyId());
-                createScheduleIntent.putExtra("schedule", schedule);
+                // Schedule schedule = new Schedule(MainActivity.this.getUid());
+                // createScheduleIntent.putExtra("schedule", schedule);
+                createScheduleIntent.putExtra("organizerUid", MainActivity.this.getUid());
                 startActivityForResult(createScheduleIntent, 100);
             }
         });
+
 
         final FloatingActionButton logOutFab = findViewById(R.id.logOutFab);
         logOutFab.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             recyclerViewAdapter.addItemCard(newCard);
             recyclerViewAdapter.setContext(getApplicationContext());
             recyclerView.setAdapter(recyclerViewAdapter);
+
         }
     }
 
@@ -97,9 +107,16 @@ public class MainActivity extends AppCompatActivity {
      * This can cause problem if multiple users call this function on the same time,
      * getting duplicate IDs.
      * @return user's Person.ID
+     * @deprecated getMyId() was a temporary feature. Please use getUid instead.
      */
     private long getMyId() {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    /**
+     * @return A String UID which can be used to identify a user in FireBase services
+     */
+    public String getUid() {
+        return this.uid;
+    }
 }

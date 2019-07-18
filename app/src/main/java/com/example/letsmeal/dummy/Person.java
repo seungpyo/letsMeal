@@ -2,11 +2,12 @@ package com.example.letsmeal.dummy;
 
 import java.util.ArrayList;
 
-// Just to test my git system
 
 public class Person {
-
-    public long id;
+    /**
+     * @param uid A UID used for identification in FireBase.
+     */
+    public String uid;
     public String name;
     public String profileImage;
     public String phoneNum;

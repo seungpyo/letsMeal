@@ -9,7 +9,7 @@ import java.util.Locale;
 public class Schedule implements Serializable {
 
     public long id;
-    public long organizerId;
+    public String organizerUid;
     public String title;
     public Calendar calendar;
 
@@ -33,8 +33,8 @@ public class Schedule implements Serializable {
      * TODO:  Media fields.
      */
 
-    public Schedule(long organizerId) {
-        this.organizerId = organizerId;
+    public Schedule(String organizerUid) {
+        this.organizerUid = organizerUid;
         this.calendar = Calendar.getInstance();
         this.description = "";
     }
@@ -43,7 +43,7 @@ public class Schedule implements Serializable {
     public String toString() {
         String str;
         str = "Schedule ID : " + id;
-        str += ", organizerID = " + organizerId;
+        str += ", organizerUID = " + organizerUid;
         str += ", title = " + title;
         str += ", date = " + Schedule.getDateString(this.calendar);
         str += ", time = " + Schedule.getTimeString(this.calendar);
@@ -132,5 +132,9 @@ public class Schedule implements Serializable {
 
     public String getParticipantsAsString() {
         return participantsAsString;
+    }
+
+    public String getOrganizerUid() {
+        return organizerUid;
     }
 }
