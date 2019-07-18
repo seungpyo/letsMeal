@@ -29,6 +29,7 @@ public class SplashActivity extends Activity {
         this.pref = getSharedPreferences("pref", MODE_PRIVATE);
         this.editor = pref.edit();
 
+
         boolean signInRequired = pref.getBoolean("signInRequired", true);
         if (signInRequired) {
             Log.d(TAG, "First access, launch signin activity");

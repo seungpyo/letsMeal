@@ -10,13 +10,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.letsmeal.dummy.Schedule;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
+    TextView noScheduleLabel;
 
     /**
      * A FireBase UID to identify user.
@@ -38,14 +41,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        uid = getIntent().getStringExtra("uid");
 
-        recyclerView = findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true); // 뭔 소리지?
         recyclerView.setLayoutManager(linearLayoutManager);
-
         recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), R.layout.activity_main);
+
+        noScheduleLabel = findViewById(R.id.noScheduleLabel);
+
+        uid = getIntent().getStringExtra("uid");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(getString(R.string.firestore_root_collection_name));
+
 
         final FloatingActionButton addItemFab = findViewById(R.id.addItemFab);
         addItemFab.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
             Schedule schedule = (Schedule)data.getExtras().getSerializable("schedule");
             ItemCard newCard = new ItemCard(schedule);
             Log.d(TAG, schedule.toString());
+
+            noScheduleLabel.setVisibility(View.INVISIBLE);
 
             recyclerViewAdapter.addItemCard(newCard);
             recyclerViewAdapter.setContext(getApplicationContext());

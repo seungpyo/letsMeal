@@ -4,32 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FEFFFF"
+    android:backgroundTint="#FEFFFF"
     tools:context=".MainActivity">
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
+        android:layout_width="408dp"
+        android:layout_height="574dp"
+        android:layout_marginTop="92dp"
+        android:background="#FEFFFF"
+        android:backgroundTint="#FEFFFF"
         android:scrollbars="vertical"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addItemFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:layout_marginStart="336dp"
         android:layout_marginRight="15sp"
-        android:layout_marginBottom="160dp"
-        android:backgroundTint="@color/design_default_color_primary_dark"
-        android:foreground="@android:drawable/ic_menu_add"
+        android:layout_marginBottom="156dp"
+        android:backgroundTint="@android:color/holo_blue_bright"
+        android:foreground="@drawable/ic_add_black_24dp"
         android:tint="#00FFFFFF"
         android:visibility="visible"
         app:backgroundTint="#ffffff"
         app:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:pressedTranslationZ="12dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,16 +44,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="15sp"
-        android:layout_marginBottom="130dp"
-        android:backgroundTint="@color/colorAccent"
-        android:foreground="@android:drawable/ic_menu_add"
+        android:layout_marginTop="28dp"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:foreground="@drawable/ic_exit_to_app_black_24dp"
         android:tint="#00FFFFFF"
         android:visibility="visible"
         app:backgroundTint="#ffffff"
         app:elevation="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/addItemFab"
+        app:layout_constraintTop_toBottomOf="@+id/addItemFab"
         app:pressedTranslationZ="12dp" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="198dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/main_activity_title"
+        android:textColor="@android:color/black"
+        android:textSize="36sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/noScheduleLabel"
+        android:layout_width="182dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="332dp"
+        android:gravity="center"
+        android:text="일정이 없어요!"
+        android:textSize="24sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

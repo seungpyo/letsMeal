@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class Schedule implements Serializable {
-
+    /**
+     * @param id A distinct ID for each schedule. Can we replace it with ID from Cloud Firestore?
+     */
     public long id;
     public String organizerUid;
     public String title;

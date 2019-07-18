@@ -4,11 +4,16 @@
     <!-- String constants for App contents -->
     <string name="schedule_no_description">일정 설명이 없습니다.</string>
     <string name="no_such_person_name"> 님은 등록되지 않은 사용자입니다.</string>
+    <string name="main_activity_name">밥 한번 먹자</string>
     <string name="main_activity_title">내 일정</string>
     <string name="create_schedule_activity_title">새 일정 만들기</string>
+
+    <!-- Firebase Cloudstore Resources -->
+    <string name="firestore_root_collection_name">scheds</string>
 
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">letsMealID</string>
     <string name="facebook_login_protocol_scheme" translatable="false">letsMealPW</string>
+
 
 </resources>

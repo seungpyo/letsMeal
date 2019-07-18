@@ -13,7 +13,7 @@
         <activity
             android:name=".SplashActivity"
             android:label="@string/create_schedule_activity_title"
-            android:theme="@style/Theme.Design.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
