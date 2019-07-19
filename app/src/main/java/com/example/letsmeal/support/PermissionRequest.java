@@ -37,7 +37,7 @@ public class PermissionRequest {
         this.activity = activity;
     }
 
-    public static final int REQUEST_CODE = 100;
+    public static final int REQUEST_CODE = 99;
 
     /**
      * @param activity Activity 객체 예를 들면 this 같은걸 넘기면 된다.
