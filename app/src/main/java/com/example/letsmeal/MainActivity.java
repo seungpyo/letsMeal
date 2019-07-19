@@ -29,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setHasFixedSize(true); // 뭔 소리지?
+        /**
+         * RecyclerView setHasFixedSize 함수에 대한 설명
+         *  @see https://developer.android.com/reference/android/support/v7/widget/RecyclerView#sethasfixedsize
+         *  요약: 리사이클러 뷰는 내용물에 상관없이 그 크기를 고정시킬 수 있는 경우 최적화를 수행할 수 있음.
+         *  만약, 리사이클러 뷰를 담고 있는 부모 뷰의 크기가 달라지는 경우 이에 맞춰서 리사이클러 뷰의 크기
+         *  또한 다시 계산해야하기 때문에 오버헤드가 있는데 이러한 오버헤드가 불필요한 경우 쓰면 되는듯함.
+         */
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), R.layout.activity_main);
