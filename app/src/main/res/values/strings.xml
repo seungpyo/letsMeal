@@ -9,7 +9,9 @@
     <string name="create_schedule_activity_title">새 일정 만들기</string>
 
     <!-- Firebase Cloudstore Resources -->
-    <string name="firestore_root_collection_name">scheds</string>
+    <string name="firestore_schedule_collection">scheds</string>
+    <string name="firestore_user_collection">users</string>
+
 
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">letsMealID</string>

@@ -140,40 +140,6 @@ public class CreateScheduleActivity extends AppCompatActivity {
     };
 
     /**
-     * Listens to onKey event of participantsText.
-     * Detects space bar / enter input, and tokenize the latest name input.
-     */
-
-    /**
-     * This function listens to space or enter key event.
-     * If those keys are pressed, it gets the latest name.
-     * The name is given as a query to Person DB, thus validating the given username.
-     */
-    public boolean getLastInputPersonName(View v, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN &&
-                (keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_ENTER)) {
-            String [] names = participantsText.getText().toString().split("\\s+");
-            String newName = names[names.length - 1];
-            Person foundPerson = findPersonByName(newName);
-            // No such person found
-            if (foundPerson == null) {
-                personNotFoundLabel.setText(newName + getString(R.string.no_such_person_name));
-                personNotFoundLabel.setVisibility(View.VISIBLE);
-                Log.d(TAG, "NO Such person");
-            }
-            Log.d(TAG, "onKey detected name - " + newName);
-            // Does this undermine performance?
-            return true;
-        } else {
-            Log.d(TAG, "Trivial Key Input Detected!");
-            personNotFoundLabel.setVisibility(View.INVISIBLE);
-            return false;
-        }
-    }
-
-
-
-    /**
      * Finds a Person from database by name
      * Currently, this function just returns a trivial Person object.
      * TODO: Send a query to FireBase CloudStore and retrieve a Person object.
@@ -197,7 +163,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
     private Button.OnClickListener submitBtnOnclickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
-            schedule.setCalendar(
+            schedule.setTimestamp(
                     dateCalendar.get(dateCalendar.YEAR),
                     dateCalendar.get(dateCalendar.MONTH),
                     dateCalendar.get(dateCalendar.DAY_OF_MONTH),
@@ -208,11 +174,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
             schedule.setTitle(titleText.getText().toString());
             Log.d(TAG, Schedule.getDateString(dateCalendar));
             Log.d(TAG, Schedule.getTimeString(timeCalendar));
-            Log.d(TAG, schedule.getCalendar().toString());
-            schedule.setLatitude(0.0);
-            schedule.setLongitude(0.0);
+            Log.d(TAG, schedule.timestampToCalendar().toString());
             schedule.setPlace(placeText.getText().toString());
-            schedule.setParticipantsAsString(participantsText.getText().toString());
 
             Intent resultSchedule = new Intent();
             resultSchedule.putExtra("schedule", schedule);

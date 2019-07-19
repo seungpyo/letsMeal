@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.letsmeal.dummy.Schedule;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,7 +53,14 @@ public class SplashActivity extends Activity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    String uid = pref.getString("uid", null);
+                    if (uid == null) {
+                        Log.d(TAG, "uid stored in SharedPreference is ull");
+                    }
+
+                    Intent MainActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
+                    MainActivityIntent.putExtra("uid", uid);
+                    startActivity(new Intent(MainActivityIntent));
                     finish();
                 }
             }, SPLASH_TIME_OUT);
@@ -70,9 +79,11 @@ public class SplashActivity extends Activity {
                 Log.d(TAG, "Log in Success");
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 editor.putBoolean("signInRequired", false);
+                editor.putString("uid", user.getUid());
                 editor.commit();
 
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
+                Log.d(TAG, "UID put as " + user.getUid());
                 mainActivityIntent.putExtra("uid", user.getUid());
                 startActivity(mainActivityIntent);
                 finish();
@@ -90,6 +101,11 @@ public class SplashActivity extends Activity {
             }
         }
 
+    }
+
+    private List<Schedule> getInitialScheduleList() {
+        List<Schedule> schedules = new ArrayList<>();
+        return schedules;
     }
 
 }

@@ -63,7 +63,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.date.setText(item.getDate());
         holder.time.setText(item.getTime());
         holder.place.setText(item.getPlace());
-        holder.participants.setText(item.getParticipants());
+        // toString() is just a quick fix. Maybe we should change View type of participants.
+        holder.participants.setText(item.getParticipants().toString());
         holder.description.setText(item.getDescription());
 
         holder.cardview.setOnClickListener(new View.OnClickListener() {
