@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.letsmeal.dummy.Schedule;
 import com.firebase.ui.auth.AuthUI;
@@ -80,24 +81,9 @@ public class MainActivity extends AppCompatActivity {
         userCollection = db.collection(getString(R.string.firestore_user_collection));
 
 
-        // ArrayList<Schedule>initialSchedules = getInitialSchedules(scheduleCollection);
         this.initialScheduleHandler = new Handler();
         Thread getInitialSchedules = new Thread(new GetInitialSchedules());
         getInitialSchedules.start();
-
-        /*
-        Log.d(TAG, "getInitialSchedules returned ArrayList: " + initialSchedules.toString());
-
-        if (!initialSchedules.isEmpty()) {
-            noScheduleLabel.setVisibility(View.INVISIBLE);
-        }
-        for (Schedule schedule : initialSchedules) {
-            ItemCard newCard = new ItemCard(schedule);
-            recyclerViewAdapter.addItemCard(newCard);
-            recyclerViewAdapter.setContext(getApplicationContext());
-            recyclerView.setAdapter(recyclerViewAdapter);
-        }
-        */
 
         final FloatingActionButton addItemFab = findViewById(R.id.addItemFab);
         addItemFab.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         recyclerViewAdapter.addItemCard(newCard);
                         recyclerViewAdapter.setContext(getApplicationContext());
                         recyclerView.setAdapter(recyclerViewAdapter);
+
                     } else if (task.isCanceled()) {
                         Log.d(TAG, "Txn canceled while writing a schedule object at FireStore");
                     } else {
@@ -169,14 +156,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     /**
-     * Reads user's schedules from FireStore and load them before starting the app.
-     * @return ArrayList of Schedule
+     * An internal class fetching initial schedules from FireStore.
+     * TODO: Replacing this with AsyncTask may enable reporting using onProgressUpdate().
+     *
      */
-
-
-    class GetInitialSchedules implements Runnable {
+    private class GetInitialSchedules implements Runnable {
         @Override
         public void run() {
             Query query = scheduleCollection.whereArrayContains("participants", MainActivity.this.uid);
@@ -207,52 +192,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    private ArrayList<Schedule> getInitialSchedules(CollectionReference scheduleCollection) {
-        final ArrayList<Schedule> schedules = new ArrayList<>();
-        final CountDownLatch done = new CountDownLatch(1);
-
-        final long t0 = System.currentTimeMillis();
-
-        Query query = scheduleCollection.whereArrayContains("participants", this.uid);
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                done.countDown();;
-
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "Got " + task.getResult().size() + " initial schedules");
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, "Addding an object...");
-                        schedules.add((Schedule)document.toObject(Schedule.class));
-                        Log.d(TAG, "Added an object with title ");
-                    }
-                } else {
-                    Log.d(TAG, "Failed to get initial schedules: " + task.getException());
-                }
-                // done.countDown();
-                Log.d(TAG, "(Fb thread) Elapsed time = " + (System.currentTimeMillis()-t0));
-                Log.d(TAG, "schedules = " + schedules.toString());
-
-            }
-        });
-
-        try {
-            Log.d(TAG, "Wait until FireStore Txn is done...");
-            done.await();
-            // done.await(1000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            Log.d(TAG, "await threw InterruptException!");
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, "getInitialSchedules returning: " + schedules.toString());
-        Log.d(TAG, "Elapsed time = " + (System.currentTimeMillis() - t0));
-        return schedules;
-    }
-    */
     /**
      * @return A String UID which can be used to identify a user in FireBase services
      */
