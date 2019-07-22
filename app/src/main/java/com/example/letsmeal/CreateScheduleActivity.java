@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -20,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.letsmeal.dummy.Person;
+import com.example.letsmeal.dummy.User;
 import com.example.letsmeal.dummy.Schedule;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,6 +32,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,14 +55,14 @@ public class CreateScheduleActivity extends AppCompatActivity {
     Button submitBtn;
     Toolbar createScheduleToolBar;
 
-    ArrayList<String> participantNames;
-    ArrayList<String> participantUIDs;
+    ArrayList<User> participants;
 
     FirebaseFirestore db;
     CollectionReference scheduleCollection;
     CollectionReference userCollection;
 
     Handler usersHandler;
+    LinearLayout participantsLinearLayout;
 
 
     @Override
@@ -67,18 +70,12 @@ public class CreateScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_schedule);
 
-        db = FirebaseFirestore.getInstance();
-        scheduleCollection = db.collection(getString(R.string.firestore_schedule_collection));
-        userCollection = db.collection(getString(R.string.firestore_user_collection));
+        /* Get my User instance from MainActivity */
+        final User organizer = (User)getIntent().getSerializableExtra("organizer");
 
-        final String organizerUid = getIntent().getStringExtra("organizerUid");
-        final String organizerName = getIntent().getStringExtra("organizerName");
-        participantUIDs = new ArrayList<>();
-        participantUIDs.add(organizerUid);
-        participantNames = new ArrayList<>();
-        participantNames.add(organizerName);
+        /* Initialize fields */
 
-        this.schedule = new Schedule(organizerUid);
+        this.schedule = new Schedule(organizer);
         this.dateCalendar = Calendar.getInstance();
         this.timeCalendar = Calendar.getInstance();
 
@@ -92,11 +89,31 @@ public class CreateScheduleActivity extends AppCompatActivity {
         this.findUidBtn = findViewById(R.id.findUidBtn);
         this.submitBtn = findViewById(R.id.submitBtn);
         this.createScheduleToolBar = findViewById(R.id.createScheduleToolBar);
+        this.participantsLinearLayout = findViewById(R.id.participantsLinearLayout);
+
+        this.usersHandler = new Handler();
+
+        this.db = FirebaseFirestore.getInstance();
+        this.scheduleCollection = db.collection(getString(R.string.firestore_schedule_collection));
+        this.userCollection = db.collection(getString(R.string.firestore_user_collection));
+
+        /* Initialize Toolbar */
 
         setSupportActionBar(this.createScheduleToolBar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        /* Initialize participant ArrayList and nametags */
+
+        this.participants = new ArrayList<>();
+        participants.add(organizer);
+        TextView tv = (TextView) getLayoutInflater().inflate(R.layout.nametag, null);
+        tv.setText(organizer.getName());
+        participantsLinearLayout.addView(tv);
+
+
+        /* set listeners */
 
         dateText.setOnClickListener(new EditText.OnClickListener() {
             @Override
@@ -104,6 +121,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 currentDatePickerDialog().show();
             }
         });
+
         timeText.setOnClickListener(new EditText.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,8 +129,6 @@ public class CreateScheduleActivity extends AppCompatActivity {
             }
         });
 
-
-        this.usersHandler = new Handler();
         findUidBtn.setOnClickListener(findUidBtnOnClickListener);
 
         submitBtn.setOnClickListener(submitBtnOnclickListener);
@@ -179,12 +195,14 @@ public class CreateScheduleActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             CreateScheduleActivity.this.personNotFoundLabel.setVisibility(View.INVISIBLE);
+            final String name = participantsText.getText().toString();
+
+            participantsText.setText("");
 
             //TODO: Check if the requested name's UID is already in local device due to a previous query.
 
             class FetchUidFromFirestore implements Runnable {
                 public void run() {
-                    final String name = participantsText.getText().toString();
                     final Query query = userCollection.whereEqualTo("name", name);
                     query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -200,12 +218,17 @@ public class CreateScheduleActivity extends AppCompatActivity {
                                 for (final QueryDocumentSnapshot document : task.getResult()) {
                                     // User document has UID as its document ID.
                                     final String uid = document.getId();
-                                    if (!participantUIDs.contains(uid)) {
+                                    final User user = new User(uid, name);
+                                    if (!participants.contains(user)) {
                                         usersHandler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                participantUIDs.add(uid);
+                                                participants.add(user);
                                                 // TODO: Update UI using user name tags.
+                                                TextView nametag =
+                                                        (TextView) getLayoutInflater().inflate(R.layout.nametag, null);
+                                                nametag.setText(name);
+                                                participantsLinearLayout.addView(nametag);
                                                 Log.d(TAG, "Added " + document.get("name") + ", uid = " + document.get("uid"));
                                             }
                                         });
@@ -252,7 +275,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
             Log.d(TAG, schedule.timestampToCalendar().toString());
             schedule.setPlace(placeText.getText().toString());
 
-            schedule.setParticipants(participantUIDs);
+            schedule.setParticipants(participants);
 
             Intent resultSchedule = new Intent();
             resultSchedule.putExtra("schedule", schedule);

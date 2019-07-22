@@ -15,7 +15,7 @@ public class Schedule implements Serializable {
      * @param id A distinct ID for each schedule. Can we replace it with ID from Cloud Firestore?
      */
     public long id;
-    public String organizerUid;
+    public User organizer;
     public String title;
 
     // Firebase only supports timestamp.
@@ -26,7 +26,8 @@ public class Schedule implements Serializable {
     public String place;
 
     // We store participants as a list of Person.ID.
-    public ArrayList<String> participants;
+    public ArrayList<String> participantUids;
+    public ArrayList<User> participants;
     public HashMap<String, Boolean> participates;
 
     public String description;
@@ -44,23 +45,22 @@ public class Schedule implements Serializable {
     public Schedule(){
         // Dummy no-argument constructor for FireStore compatibility.
         this.participants = new ArrayList<>();
+        this.participantUids = new ArrayList<>();
     }
 
-    public Schedule(String organizerUid) {
-
-        if (organizerUid == null) {
-            Log.d(TAG, "organizer uid is null");
-            Log.d(TAG, "ORGANIZER UID SHOULD NEVER BE NULL!!!");
+    public Schedule(User organizer) {
+        if (organizer == null) {
+            Log.d(TAG, "got null organizer, violating integrity constraint");
         }
 
-        this.organizerUid = organizerUid;
+        this.organizer = organizer;
         this.description = "";
 
         this.participants = new ArrayList<>();
-        this.participants.add(organizerUid);
+        this.participants.add(organizer);
 
-        Log.d(TAG, this.organizerUid);
-
+        this.participantUids = new ArrayList<>();
+        this.participantUids.add(organizer.getUid());
     }
 
 
@@ -68,9 +68,7 @@ public class Schedule implements Serializable {
     public long getId() {
         return id;
     }
-    public String getOrganizerUid() {
-        return organizerUid;
-    }
+    public User getOrganizer() { return organizer; }
     public String getTitle() {
         return this.title;
     }
@@ -91,7 +89,10 @@ public class Schedule implements Serializable {
     public String getDescription() {
         return this.description;
     }
-    public ArrayList<String> getParticipants() {
+    public ArrayList<String> getParticipantUids() {
+        return participantUids;
+    }
+    public ArrayList<User> getParticipants() {
         return participants;
     }
     public HashMap<String, Boolean> getParticipates() {
@@ -128,10 +129,15 @@ public class Schedule implements Serializable {
     public void setPlace(String place) {
         this.place = place;
     }
-    public void setDescription(String description) {this.description = description;}
-
-    public void setParticipants(ArrayList<String> participants) {
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setParticipants(ArrayList<User> participants) {
         this.participants = participants;
+    }
+
+    public void setParticipantUids(ArrayList<String> participantUids) {
+        this.participantUids = participantUids;
     }
 
     /**
@@ -178,7 +184,8 @@ public class Schedule implements Serializable {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(this.timestamp);
         str = "Schedule ID : " + id;
-        str += ", organizerUID = " + organizerUid;
+        str += ", organizer name = " + organizer.getName();
+        str += ", organizerUID = " + organizer.getUid();
         str += ", title = " + title;
         str += ", date = " + Schedule.getDateString(cal);
         str += ", time = " + Schedule.getTimeString(cal);

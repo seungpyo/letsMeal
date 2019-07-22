@@ -1,6 +1,7 @@
 package com.example.letsmeal;
 
 import com.example.letsmeal.dummy.Schedule;
+import com.example.letsmeal.dummy.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,7 +14,7 @@ public class ItemCard implements Comparable<ItemCard> {
     String date;
     String time;
     String place;
-    ArrayList<String> participants; // A list of participants are marshaled into a single String
+    ArrayList<User> participants; // A list of participants are marshaled into a single String
     String description;
 
     Calendar calendar;
@@ -46,10 +47,10 @@ public class ItemCard implements Comparable<ItemCard> {
     public void setPlace(String place) {
         this.place = place;
     }
-    public ArrayList<String> getParticipants() {
+    public ArrayList<User> getParticipants() {
         return participants;
     }
-    public void setParticipants(ArrayList<String> participants) {
+    public void setParticipants(ArrayList<User> participants) {
         this.participants = participants;
     }
     public String getDescription() {

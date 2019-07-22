@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.letsmeal.dummy.Schedule;
+import com.example.letsmeal.dummy.User;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -61,8 +62,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * A FireBase UID to identify user.
      */
-    private String uid;
-    private String userName;
+    private User me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity
         /**
          * Get the user's UID from SplashActivity
          */
-        uid = getIntent().getStringExtra("uid");
-        Log.d(TAG, "Received uid " + uid + " from Splash");
+        me = (User)getIntent().getSerializableExtra("me");
+        Log.d(TAG, "Received uid " + me.getUid() + " from Splash");
         /**
          * Initialize FireStore instance and CollectionReferences.
          */
@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent createScheduleIntent = new Intent(MainActivity.this, CreateScheduleActivity.class);
                 Log.d(TAG, "organizer uid is " + MainActivity.this.getUid() + " just before creating schedule");
-                createScheduleIntent.putExtra("organizerUid", MainActivity.this.getUid());
-                createScheduleIntent.putExtra("organizerName", MainActivity.this.getUserName());
+                User organizer = new User(MainActivity.this.getUid(), MainActivity.this.getUserName());
+                createScheduleIntent.putExtra("organizer", organizer);
                 startActivityForResult(createScheduleIntent, CREATE_SCHEDULE_REQ);
             }
         });
@@ -134,15 +134,15 @@ public class MainActivity extends AppCompatActivity
         Thread fetchOrganizerName = new Thread(new Runnable() {
             @Override
             public void run() {
-                DocumentReference docRef = userCollection.document(uid);
+                DocumentReference docRef = userCollection.document(me.getUid());
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                userName = document.get("name").toString();
-                                Log.d(TAG, "Got organizer name: " + userName);
+                                me.setName(document.get("name").toString());
+                                Log.d(TAG, "Got organizer name: " + me.getName());
                             } else {
                                 Log.d(TAG, "No such document");
                             }
@@ -251,7 +251,8 @@ public class MainActivity extends AppCompatActivity
     private class GetInitialSchedules implements Runnable {
         @Override
         public void run() {
-            Query query = scheduleCollection.whereArrayContains("participants", MainActivity.this.uid);
+            Log.d(TAG, "Query: paticipantUids contains " + MainActivity.this.me.getUid());
+            Query query = scheduleCollection.whereArrayContains("participantUids", MainActivity.this.me.getUid());
 
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -284,11 +285,11 @@ public class MainActivity extends AppCompatActivity
      * @return A String UID which can be used to identify a user in FireBase services
      */
     public String getUid() {
-        return this.uid;
+        return this.me.getUid();
     }
 
     public String getUserName() {
-        return userName;
+        return this.me.getName();
     }
 }
 
