@@ -26,6 +26,7 @@ public class ItemCard implements Comparable<ItemCard> {
         this.time = Schedule.getTimeString(this.calendar);
         this.timestamp = this.calendar.getTimeInMillis();
         this.place = schedule.getPlace();
+        // TODO: display participants in the item card.
         this.participants = schedule.getParticipants();
         this.description = schedule.getDescription();
    }

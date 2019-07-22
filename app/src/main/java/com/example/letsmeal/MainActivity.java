@@ -29,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity
      * A FireBase UID to identify user.
      */
     private String uid;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,22 +124,36 @@ public class MainActivity extends AppCompatActivity
                 Intent createScheduleIntent = new Intent(MainActivity.this, CreateScheduleActivity.class);
                 Log.d(TAG, "organizer uid is " + MainActivity.this.getUid() + " just before creating schedule");
                 createScheduleIntent.putExtra("organizerUid", MainActivity.this.getUid());
+                createScheduleIntent.putExtra("organizerName", MainActivity.this.getUserName());
                 startActivityForResult(createScheduleIntent, CREATE_SCHEDULE_REQ);
             }
         });
 
-        /*
-        final FloatingActionButton logOutFab = findViewById(R.id.logOutFab);
-        logOutFab.setOnClickListener(new View.OnClickListener() {
 
+        Handler organizerNameHandler = new Handler();
+        Thread fetchOrganizerName = new Thread(new Runnable() {
             @Override
-            public void onClick(View v) {
-
-                logout();
+            public void run() {
+                DocumentReference docRef = userCollection.document(uid);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                userName = document.get("name").toString();
+                                Log.d(TAG, "Got organizer name: " + userName);
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
             }
         });
-        */
-
+        fetchOrganizerName.start();
 
 
     }
@@ -269,6 +285,10 @@ public class MainActivity extends AppCompatActivity
      */
     public String getUid() {
         return this.uid;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }
 

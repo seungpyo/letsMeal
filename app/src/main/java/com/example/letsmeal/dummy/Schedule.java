@@ -130,6 +130,10 @@ public class Schedule implements Serializable {
     }
     public void setDescription(String description) {this.description = description;}
 
+    public void setParticipants(ArrayList<String> participants) {
+        this.participants = participants;
+    }
+
     /**
      * Pretty-print date
      * @param dateCalendar A Calendar instance which contains YEAR, MONTH, DAY_OF_MONTH

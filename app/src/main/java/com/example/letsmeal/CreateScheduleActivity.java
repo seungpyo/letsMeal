@@ -52,6 +52,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
     Button submitBtn;
     Toolbar createScheduleToolBar;
 
+    ArrayList<String> participantNames;
     ArrayList<String> participantUIDs;
 
     FirebaseFirestore db;
@@ -66,10 +67,16 @@ public class CreateScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_schedule);
 
-        // this.schedule = (Schedule) getIntent().getSerializableExtra("schedule");
-        String organizerUid = getIntent().getStringExtra("organizerUid");
+        db = FirebaseFirestore.getInstance();
+        scheduleCollection = db.collection(getString(R.string.firestore_schedule_collection));
+        userCollection = db.collection(getString(R.string.firestore_user_collection));
+
+        final String organizerUid = getIntent().getStringExtra("organizerUid");
+        final String organizerName = getIntent().getStringExtra("organizerName");
         participantUIDs = new ArrayList<>();
         participantUIDs.add(organizerUid);
+        participantNames = new ArrayList<>();
+        participantNames.add(organizerName);
 
         this.schedule = new Schedule(organizerUid);
         this.dateCalendar = Calendar.getInstance();
@@ -104,9 +111,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
             }
         });
 
-        db = FirebaseFirestore.getInstance();
-        scheduleCollection = db.collection(getString(R.string.firestore_schedule_collection));
-        userCollection = db.collection(getString(R.string.firestore_user_collection));        this.usersHandler = new Handler();
+
+        this.usersHandler = new Handler();
         findUidBtn.setOnClickListener(findUidBtnOnClickListener);
 
         submitBtn.setOnClickListener(submitBtnOnclickListener);
@@ -204,6 +210,9 @@ public class CreateScheduleActivity extends AppCompatActivity {
                                             }
                                         });
                                     } else {
+                                        CreateScheduleActivity.this.personNotFoundLabel.setText(
+                                                "사용자 " + name + "는 이미 초대 되었습니다.");
+                                        CreateScheduleActivity.this.personNotFoundLabel.setVisibility(View.VISIBLE);
                                         Log.d(TAG, "Duplicate uid for name " + document.get("name"));
                                     }
                                 }
@@ -242,6 +251,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
             Log.d(TAG, Schedule.getTimeString(timeCalendar));
             Log.d(TAG, schedule.timestampToCalendar().toString());
             schedule.setPlace(placeText.getText().toString());
+
+            schedule.setParticipants(participantUIDs);
 
             Intent resultSchedule = new Intent();
             resultSchedule.putExtra("schedule", schedule);
