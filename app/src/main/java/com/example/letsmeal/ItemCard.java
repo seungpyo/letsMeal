@@ -20,6 +20,8 @@ public class ItemCard implements Comparable<ItemCard> {
     Calendar calendar;
     long timestamp;
 
+    // TODO: add delete interface so user can delete a schedule and the item card.
+
     ItemCard(Schedule schedule) {
         this.title = schedule.getTitle();
         this.calendar = schedule.timestampToCalendar();
@@ -75,4 +77,7 @@ public class ItemCard implements Comparable<ItemCard> {
         else
             return 0;
     }
+
+
+
 }

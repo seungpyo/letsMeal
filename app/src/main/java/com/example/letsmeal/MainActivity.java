@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity
      */
     private User me;
 
+    // TODO: print user info (e.g. name, thumbnail, etc.) on DrawerLayout.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
