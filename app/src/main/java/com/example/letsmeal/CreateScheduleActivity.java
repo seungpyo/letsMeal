@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,11 +16,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.letsmeal.dummy.Person;
 import com.example.letsmeal.dummy.Schedule;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateScheduleActivity extends AppCompatActivity {
@@ -35,7 +48,17 @@ public class CreateScheduleActivity extends AppCompatActivity {
     EditText participantsText;
     EditText descriptionText;
     TextView personNotFoundLabel;
+    Button findUidBtn;
     Button submitBtn;
+    Toolbar createScheduleToolBar;
+
+    ArrayList<String> participantUIDs;
+
+    FirebaseFirestore db;
+    CollectionReference scheduleCollection;
+    CollectionReference userCollection;
+
+    Handler usersHandler;
 
 
     @Override
@@ -45,6 +68,9 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
         // this.schedule = (Schedule) getIntent().getSerializableExtra("schedule");
         String organizerUid = getIntent().getStringExtra("organizerUid");
+        participantUIDs = new ArrayList<>();
+        participantUIDs.add(organizerUid);
+
         this.schedule = new Schedule(organizerUid);
         this.dateCalendar = Calendar.getInstance();
         this.timeCalendar = Calendar.getInstance();
@@ -56,7 +82,14 @@ public class CreateScheduleActivity extends AppCompatActivity {
         this.participantsText = findViewById(R.id.participantsText);
         this.descriptionText = findViewById(R.id.descriptionText);
         this.personNotFoundLabel = findViewById(R.id.personNotFoundLabel);
+        this.findUidBtn = findViewById(R.id.findUidBtn);
         this.submitBtn = findViewById(R.id.submitBtn);
+        this.createScheduleToolBar = findViewById(R.id.createScheduleToolBar);
+
+        setSupportActionBar(this.createScheduleToolBar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         dateText.setOnClickListener(new EditText.OnClickListener() {
             @Override
@@ -71,27 +104,16 @@ public class CreateScheduleActivity extends AppCompatActivity {
             }
         });
 
-        participantsText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                return;
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                return;
-            }
-        });
-
+        db = FirebaseFirestore.getInstance();
+        scheduleCollection = db.collection(getString(R.string.firestore_schedule_collection));
+        userCollection = db.collection(getString(R.string.firestore_user_collection));        this.usersHandler = new Handler();
+        findUidBtn.setOnClickListener(findUidBtnOnClickListener);
 
         submitBtn.setOnClickListener(submitBtnOnclickListener);
 
     }
+
+
 
     /**
      * A helper function to initialize a DatePickerDialog using current date.
@@ -139,21 +161,65 @@ public class CreateScheduleActivity extends AppCompatActivity {
         }
     };
 
-    /**
-     * Finds a Person from database by name
-     * Currently, this function just returns a trivial Person object.
-     * TODO: Send a query to FireBase CloudStore and retrieve a Person object.
-     * @param name The name of the person to find
-     * @return A Person instance whose name matches the name. Returns null if no such Person exists.
-     */
-    private Person findPersonByName(String name) {
-        if (name.equals("ㅗ")) {
-            return null;
-        }
-        return new Person(name);
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
+    private Button.OnClickListener findUidBtnOnClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
+            CreateScheduleActivity.this.personNotFoundLabel.setVisibility(View.INVISIBLE);
+
+            //TODO: Check if the requested name's UID is already in local device due to a previous query.
+
+            class FetchUidFromFirestore implements Runnable {
+                public void run() {
+                    final String name = participantsText.getText().toString();
+                    final Query query = userCollection.whereEqualTo("name", name);
+                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Got " + task.getResult().size() + " matching users");
+                                // For now, we don't care about duplicate names.
+                                if (task.getResult().size() == 0) {
+                                    CreateScheduleActivity.this.personNotFoundLabel.setText(
+                                            "사용자 " + name + "을 찾을 수 없습니다.");
+                                    CreateScheduleActivity.this.personNotFoundLabel.setVisibility(View.VISIBLE);
+                                }
+                                for (final QueryDocumentSnapshot document : task.getResult()) {
+                                    // User document has UID as its document ID.
+                                    final String uid = document.getId();
+                                    if (!participantUIDs.contains(uid)) {
+                                        usersHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                participantUIDs.add(uid);
+                                                // TODO: Update UI using user name tags.
+                                                Log.d(TAG, "Added " + document.get("name") + ", uid = " + document.get("uid"));
+                                            }
+                                        });
+                                    } else {
+                                        Log.d(TAG, "Duplicate uid for name " + document.get("name"));
+                                    }
+                                }
+                            } else {
+                                Log.d(TAG, "Failed to get initial schedules: " + task.getException());
+                            }
+                        }
+                    });
+                }
+            };
+
+            Thread fetchUidFromFirestore = new Thread(new FetchUidFromFirestore());
+            fetchUidFromFirestore.start();
+
+        }
+    };
 
     /**
      * Listens to onClick event of submitBtn.
@@ -183,5 +249,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
             finish();
         }
     };
+
+
 
 }

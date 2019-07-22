@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="appOrange">#FF6400</color>
-    <color name="appDarkOrange">#aa4200</color>
+    <color name="appDarkOrange">#AA4200</color>
+    <color name="appLightOrange">#FFA080</color>
 </resources>

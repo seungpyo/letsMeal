@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     /**
      * @return A String UID which can be used to identify a user in FireBase services
      */
