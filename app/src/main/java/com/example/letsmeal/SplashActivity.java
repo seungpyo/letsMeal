@@ -66,6 +66,8 @@ public class SplashActivity extends Activity {
             }, SPLASH_TIME_OUT);
 
         }
+
+        // startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override

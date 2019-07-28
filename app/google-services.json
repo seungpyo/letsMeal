@@ -52,6 +52,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "883190983348-b5ovfrbqhgonhg6u6gq1m6lj5tefq9ma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.letsmeal",
+            "certificate_hash": "d35b46c675b3b5b53b96c3a8dc0a11297e8dbcdd"
+          }
+        },
+        {
           "client_id": "883190983348-7bdns76dgvcl5gji0ohlhb7atop4il31.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
