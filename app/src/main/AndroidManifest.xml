@@ -2,6 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.letsmeal">
 
+    <!-- Google Map API -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+
+    <!-- Image Loading & Caching -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -10,6 +21,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Google Map API -->
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA_psgFw1zR8J91jBQSq7GSJONeFBpE0qM" />
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
         <activity
             android:name=".SplashActivity"
             android:label="@string/create_schedule_activity_title"
@@ -28,6 +45,8 @@
             android:name=".CreateScheduleActivity"
             android:label="@string/create_schedule_activity_title">
         </activity>
+
+        <activity android:name=".MapActivity" android:label="Map Activity" />
     </application>
 
 </manifest>

@@ -132,6 +132,14 @@ public class CreateScheduleActivity extends AppCompatActivity {
         findUidBtn.setOnClickListener(findUidBtnOnClickListener);
 
         submitBtn.setOnClickListener(submitBtnOnclickListener);
+        placeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    startActivity(new Intent(getBaseContext(), MapActivity.class));
+                }
+            }
+        });
 
     }
 
