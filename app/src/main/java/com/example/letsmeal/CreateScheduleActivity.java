@@ -53,6 +53,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
     TextView personNotFoundLabel;
     Button findUidBtn;
     Button submitBtn;
+    Button mapActivityBtn;
     Toolbar createScheduleToolBar;
 
     ArrayList<User> participants;
@@ -88,6 +89,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
         this.personNotFoundLabel = findViewById(R.id.personNotFoundLabel);
         this.findUidBtn = findViewById(R.id.findUidBtn);
         this.submitBtn = findViewById(R.id.submitBtn);
+        this.mapActivityBtn = findViewById(R.id.mapActivityBtn);
+
         this.createScheduleToolBar = findViewById(R.id.createScheduleToolBar);
         this.participantsLinearLayout = findViewById(R.id.participantsLinearLayout);
 
@@ -132,6 +135,16 @@ public class CreateScheduleActivity extends AppCompatActivity {
         findUidBtn.setOnClickListener(findUidBtnOnClickListener);
 
         submitBtn.setOnClickListener(submitBtnOnclickListener);
+
+
+        mapActivityBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getBaseContext(), MapActivity.class));
+            }
+        });
+
+        /*
         placeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -140,6 +153,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 }
             }
         });
+        */
 
     }
 

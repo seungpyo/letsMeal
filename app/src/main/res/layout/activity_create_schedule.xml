@@ -132,7 +132,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/mapActivityBtn2"
+        android:id="@+id/mapActivityBtn"
         android:layout_width="62dp"
         android:layout_height="48dp"
         android:layout_marginStart="20dp"
