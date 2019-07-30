@@ -110,7 +110,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == PermissionRequest.REQUEST_CODE){
+        if(requestCode == PermissionRequest.REQUEST_MAP_PERM_CODE){
             try {
                 // 위치정보 접근 권한 검사
                 if (permissions.length == 2 && PermissionRequest.allGranted(grantResults)) {

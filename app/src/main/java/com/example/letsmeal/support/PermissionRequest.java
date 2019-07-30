@@ -33,11 +33,13 @@ public class PermissionRequest {
     private Activity activity;
     private ArrayList<String> permissions = new ArrayList<>();
     private int numberRequested = 0;
+    private int requestCode = 0;
     private PermissionRequest(Activity activity){
         this.activity = activity;
     }
 
-    public static final int REQUEST_CODE = 100;
+    public static final int REQUEST_MAP_PERM_CODE = 100;
+    public static final int REQUEST_CALENDAR_PERM_CODE = 200;
 
     /**
      * @param activity Activity 객체 예를 들면 this 같은걸 넘기면 된다.
@@ -85,6 +87,7 @@ public class PermissionRequest {
             permissions.add(Manifest.permission.WRITE_CALENDAR);
         }
         numberRequested += 2;
+        requestCode = REQUEST_CALENDAR_PERM_CODE;
         return this;
     }
 
@@ -99,6 +102,7 @@ public class PermissionRequest {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
         numberRequested += 2;
+        requestCode = REQUEST_MAP_PERM_CODE;
         return this;
     }
 
@@ -110,7 +114,7 @@ public class PermissionRequest {
             permissions[idx++] = permission;
 
         if(permissions.length > 0)
-            ActivityCompat.requestPermissions(activity, permissions, REQUEST_CODE);
+            ActivityCompat.requestPermissions(activity, permissions, requestCode);
 
         return this;
     }

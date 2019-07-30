@@ -2,13 +2,16 @@ package com.example.letsmeal;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.provider.CalendarContract;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,22 +24,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.letsmeal.dummy.CalendarPair;
+import com.example.letsmeal.dummy.TimeRecommendation;
 import com.example.letsmeal.dummy.User;
 import com.example.letsmeal.dummy.Schedule;
+import com.example.letsmeal.support.PermissionRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Calendar;
+import java.util.Collections;
 
 public class CreateScheduleActivity extends AppCompatActivity {
 
@@ -44,6 +49,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
     Schedule schedule;
     Calendar dateCalendar, timeCalendar;
+
     EditText titleText;
     EditText dateText;
     EditText timeText;
@@ -54,6 +60,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
     Button findUidBtn;
     Button submitBtn;
     Button mapActivityBtn;
+    Button timeRecommendBtn;
+
     Toolbar createScheduleToolBar;
 
     ArrayList<User> participants;
@@ -76,23 +84,25 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
         /* Initialize fields */
 
+        titleText = findViewById(R.id.titleText);
+        dateText = findViewById(R.id.dateText);
+        timeText = findViewById(R.id.timeText);
+        placeText = findViewById(R.id.placeText);
+        participantsText = findViewById(R.id.participantsText);
+        descriptionText = findViewById(R.id.descriptionText);
+        personNotFoundLabel = findViewById(R.id.personNotFoundLabel);
+        findUidBtn = findViewById(R.id.findUidBtn);
+        submitBtn = findViewById(R.id.submitBtn);
+        mapActivityBtn = findViewById(R.id.mapActivityBtn);
+        timeRecommendBtn = findViewById(R.id.timeRecommendBtn);
+
+        createScheduleToolBar = findViewById(R.id.createScheduleToolBar);
+        participantsLinearLayout = findViewById(R.id.participantsLinearLayout);
+
+
         this.schedule = new Schedule(organizer);
         this.dateCalendar = Calendar.getInstance();
         this.timeCalendar = Calendar.getInstance();
-
-        this.titleText = findViewById(R.id.titleText);
-        this.dateText = findViewById(R.id.dateText);
-        this.timeText = findViewById(R.id.timeText);
-        this.placeText = findViewById(R.id.placeText);
-        this.participantsText = findViewById(R.id.participantsText);
-        this.descriptionText = findViewById(R.id.descriptionText);
-        this.personNotFoundLabel = findViewById(R.id.personNotFoundLabel);
-        this.findUidBtn = findViewById(R.id.findUidBtn);
-        this.submitBtn = findViewById(R.id.submitBtn);
-        this.mapActivityBtn = findViewById(R.id.mapActivityBtn);
-
-        this.createScheduleToolBar = findViewById(R.id.createScheduleToolBar);
-        this.participantsLinearLayout = findViewById(R.id.participantsLinearLayout);
 
         this.usersHandler = new Handler();
 
@@ -136,6 +146,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
         submitBtn.setOnClickListener(submitBtnOnclickListener);
 
+        timeRecommendBtn.setOnClickListener(timeRecommendBtnOnClickListener);
+
 
         mapActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,17 +155,6 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 startActivity(new Intent(getBaseContext(), MapActivity.class));
             }
         });
-
-        /*
-        placeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(b){
-                    startActivity(new Intent(getBaseContext(), MapActivity.class));
-                }
-            }
-        });
-        */
 
     }
 
@@ -211,6 +212,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+
 
     private Button.OnClickListener findUidBtnOnClickListener = new Button.OnClickListener() {
         @Override
@@ -305,6 +308,92 @@ public class CreateScheduleActivity extends AppCompatActivity {
             finish();
         }
     };
+
+    public static final String[] INSTANCE_PROJECTION = new String[] {
+            CalendarContract.Instances.TITLE, // required for debugging.
+            CalendarContract.Instances.BEGIN,
+            CalendarContract.Instances.END
+    };
+
+    private static final int PROJECTION_TITLE_INDEX = 0;
+    private static final int PROJECTION_BEGIN_INDEX = 1;
+    private static final int PROJECTION_END_INDEX = 2;
+
+    private Button.OnClickListener timeRecommendBtnOnClickListener = new Button.OnClickListener() {
+       @Override
+       public void onClick(View v) {
+
+           Log.d(TAG, "requesting calendar perms...");
+           PermissionRequest.with(CreateScheduleActivity.this).needCalendar().request();
+
+       }
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Log.d(TAG, "onRequestPermissionsResult");
+        Cursor cur = null;
+        ContentResolver cr = CreateScheduleActivity.this.getApplicationContext().getContentResolver();
+        ContentValues cv = new ContentValues();
+
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+
+        start.set(2019, 05, 21);
+        end.set(2020, 01, 01);
+
+        CalendarPair cp = new CalendarPair(start, end);
+
+
+        String selction = "((dtstart >= " + cp.start.getTimeInMillis() + ") AND " +
+                "(dtend <= " + cp.end.getTimeInMillis() + "))";
+
+
+        ArrayList<CalendarPair> calendarPairs = new ArrayList<>();
+        Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
+        ContentUris.appendId(builder, cp.start.getTimeInMillis());
+        ContentUris.appendId(builder, cp.end.getTimeInMillis());
+
+        switch (requestCode) {
+            case PermissionRequest.REQUEST_CALENDAR_PERM_CODE:
+                try {
+                    cur = cr.query(builder.build(),
+                            INSTANCE_PROJECTION,
+                            selction, null, null);
+
+                    while (cur.moveToNext()) {
+                        String title = cur.getString(PROJECTION_TITLE_INDEX);
+                        long beginMillis = cur.getLong(PROJECTION_BEGIN_INDEX);
+                        long endMillis = cur.getLong(PROJECTION_END_INDEX);
+
+                        // TODO: datetime comparison code should be put here.
+
+                        Calendar beginCal = Calendar.getInstance();
+                        beginCal.setTimeInMillis(beginMillis);
+                        Calendar endCal = Calendar.getInstance();
+                        endCal.setTimeInMillis(endMillis);
+                        calendarPairs.add(new CalendarPair(beginCal, endCal));
+
+                        Log.d(TAG, "Schedule title: " + title);
+
+                    }
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
+
+                TimeRecommendation tr = new TimeRecommendation(calendarPairs);
+                ArrayList<CalendarPair> recommendations = tr.recommendTime();
+
+                break;
+            default:
+                Log.d(TAG, "Wrong request code for calendar permission!");
+
+        }
+
+    };
+
 
 
 
