@@ -43,9 +43,10 @@ public class User implements Serializable {
         this.name = name;
     }
 
+
+
     @Override
     public boolean equals(Object that) {
-        Log.d("우효~", "쵸-럭키wwww");
         if (that instanceof User) {
             return this.uid.equals(((User) that).getUid());
         } else {
