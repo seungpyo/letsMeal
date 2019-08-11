@@ -7,6 +7,7 @@
     <string name="main_activity_name">밥 한번 먹자</string>
     <string name="main_activity_title">내 일정</string>
     <string name="create_schedule_activity_title">새 일정 만들기</string>
+    <string name="geo_search_hint">장소 검색</string>
 
     <!-- Firebase Cloudstore Resources -->
     <string name="firestore_schedule_collection">scheds</string>
