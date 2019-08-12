@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:backgroundTint="@android:color/white"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview"
-        card_view:cardCornerRadius="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,40 +20,69 @@
 
             <TextView
                 android:id="@+id/title"
+                android:hint="제목이 없습니다."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="24dp"
-                android:hint="일정 제목"/>
+                android:gravity="left"
+                android:padding="10dp"
+                android:layout_marginVertical="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="30sp" />
+
             <TextView
                 android:id="@+id/date"
+                android:hint="날짜 미정"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:hint="날짜"/>
+                android:gravity="left"
+                android:padding="4dp"
+                android:layout_marginVertical="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/time"
+                android:hint="시간 미정"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:hint="시간"/>
+                android:gravity="left"
+                android:padding="4dp"
+                android:layout_marginVertical="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/place"
+                android:hint="장소 미정"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:hint="장소"/>
+                android:gravity="left"
+                android:padding="4dp"
+                android:layout_marginVertical="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/participants"
+                android:hint="참석자가 없습니다."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:hint="참가자 명단"/>
+                android:gravity="left"
+                android:padding="4dp"
+                android:layout_marginVertical="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/description"
+                android:hint="설명이 없습니다."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:hint="일정 설명"/>
+                android:gravity="left"
+                android:padding="4dp"
+                android:layout_marginVertical="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

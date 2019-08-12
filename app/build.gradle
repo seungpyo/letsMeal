@@ -30,7 +30,22 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0-rc01'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.google.firebase:firebase-firestore:18.2.0'
+
+    /* Google Map API */
+    implementation 'com.google.android.libraries.places:places:1.1.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    /* Geo-coding */
+    implementation("com.squareup.okhttp3:okhttp:4.0.1") // (AJAX Library)
+
+    // implementation 'com.facebook.android:facebook-login:5.0.0'
 
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -14,9 +14,9 @@
         android:layout_marginStart="72dp"
         android:layout_marginBottom="28dp"
         android:background="@color/colorAccent"
-        android:backgroundTint="@color/design_default_color_primary_dark"
+        android:backgroundTint="@color/appOrange"
         android:text="일정 등록"
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textColor="@android:color/white"
         android:textColorLink="@color/design_default_color_primary_dark"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,10 +24,10 @@
 
     <EditText
         android:id="@+id/participantsText"
-        android:layout_width="335dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="336dp"
+        android:layout_width="233dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="148dp"
         android:ems="10"
         android:hint="참석자 이름 입력"
         android:inputType="textPersonName"
@@ -36,74 +36,145 @@
 
     <EditText
         android:id="@+id/titleText"
-        android:layout_width="340dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
+        android:layout_width="355dp"
+        android:layout_height="71dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="68dp"
         android:ems="10"
         android:hint="제목 입력"
         android:inputType="textPersonName"
+        android:textSize="36sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/dateText"
-        android:layout_width="156dp"
-        android:layout_height="49dp"
+        android:layout_width="169dp"
+        android:layout_height="45dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
+        android:focusable="false"
         android:hint="날짜 선택"
         android:inputType="date"
-        android:focusable="false"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+        app:layout_constraintTop_toBottomOf="@+id/timeRecommendBtn" />
 
     <EditText
         android:id="@+id/timeText"
-        android:layout_width="168dp"
-        android:layout_height="49dp"
+        android:layout_width="165dp"
+        android:layout_height="43dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
         android:ems="10"
+        android:focusable="false"
         android:hint="시간 선택"
         android:inputType="time"
-        android:focusable="false"
         app:layout_constraintStart_toEndOf="@+id/dateText"
-        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+        app:layout_constraintTop_toTopOf="@+id/dateText" />
 
     <EditText
         android:id="@+id/descriptionText"
-        android:layout_width="332dp"
-        android:layout_height="135dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="44dp"
+        android:layout_width="352dp"
+        android:layout_height="116dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="508dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="일정 설명을 적어주세요."
         android:inputType="textMultiLine"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/participantsText" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/personNotFoundLabel"
-        android:layout_width="142dp"
-        android:layout_height="18dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
         android:textColor="@android:color/holo_red_dark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/participantsText" />
 
     <EditText
         android:id="@+id/placeText"
-        android:layout_width="334dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="120dp"
+        android:layout_width="273dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
         android:ems="10"
         android:hint="장소 입력"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+        app:layout_constraintTop_toBottomOf="@+id/geoRecommendBtn" />
+
+    <Button
+        android:id="@+id/timeRecommendBtn"
+        android:layout_width="254dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="272dp"
+        android:backgroundTint="@color/appOrange"
+        android:text="언제 볼까?"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/geoRecommendBtn"
+        android:layout_width="254dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="392dp"
+        android:backgroundTint="@color/appOrange"
+        android:text="어디서 볼까?"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/mapActivityBtn"
+        android:layout_width="62dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:backgroundTint="@color/appOrange"
+        android:text="지도"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toEndOf="@+id/placeText"
+        app:layout_constraintTop_toTopOf="@+id/placeText" />
+
+    <Button
+        android:id="@+id/findUidBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:background="@color/appOrange"
+        android:text="참석자 추가"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toEndOf="@+id/participantsText"
+        app:layout_constraintTop_toTopOf="@+id/participantsText" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/createScheduleToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/appOrange"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="내 일정"
+        android:textStyle="bold"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:titleTextColor="@android:color/white" />
+
+    <LinearLayout
+        android:id="@+id/participantsLinearLayout"
+        android:layout_width="360dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/participantsText"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

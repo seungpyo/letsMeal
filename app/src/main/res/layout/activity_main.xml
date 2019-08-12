@@ -1,33 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="true">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:scrollbars="vertical"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:backgroundTint="#FEFFFF"
+        tools:context=".MainActivity">
 
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/mainToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/appOrange"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="내 일정"
+            android:textStyle="bold"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+            app:titleTextColor="@android:color/white" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="408dp"
+            android:layout_height="574dp"
+            android:layout_marginTop="92dp"
+            android:background="#FEFFFF"
+            android:backgroundTint="#FEFFFF"
+            android:scrollbars="vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addItemFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginStart="336dp"
+            android:layout_marginRight="15sp"
+            android:layout_marginBottom="156dp"
+            android:backgroundTint="@color/appOrange"
+            android:foreground="@drawable/ic_add_black_24dp"
+            android:tint="#00FFFFFF"
+            android:visibility="visible"
+            app:backgroundTint="#ffffff"
+            app:elevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:pressedTranslationZ="12dp" />
+
+        <!--
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addItemFab"
+        android:id="@+id/logOutFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="15sp"
-        android:layout_marginBottom="160dp"
-        android:backgroundTint="@color/design_default_color_primary_dark"
-        android:foreground="@android:drawable/ic_menu_add"
+        android:layout_marginTop="28dp"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:foreground="@drawable/ic_exit_to_app_black_24dp"
         android:tint="#00FFFFFF"
         android:visibility="visible"
         app:backgroundTint="#ffffff"
         app:elevation="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/addItemFab"
+        app:layout_constraintTop_toBottomOf="@+id/addItemFab"
         app:pressedTranslationZ="12dp" />
+    -->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/noScheduleLabel"
+            android:layout_width="182dp"
+            android:layout_height="66dp"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="332dp"
+            android:gravity="center"
+            android:text="일정이 없어요!"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<com.google.android.material.navigation.NavigationView
+    android:id="@+id/nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    app:menu="@menu/drawer"
+    app:headerLayout="@layout/navigation_header"/>
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
