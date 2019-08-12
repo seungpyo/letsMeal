@@ -42,6 +42,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
+    /* Geo-coding */
+    implementation("com.squareup.okhttp3:okhttp:4.0.1") // (AJAX Library)
+
     // implementation 'com.facebook.android:facebook-login:5.0.0'
 
 }
