@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -94,7 +93,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b){
-                    startActivity(new Intent(getBaseContext(), MapActivity.class));
+                    startActivity(new Intent(getBaseContext(), GeoSearchActivity.class));
                 }
             }
         });

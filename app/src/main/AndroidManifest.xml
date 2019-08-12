@@ -46,9 +46,15 @@
             android:label="@string/create_schedule_activity_title">
         </activity>
 
-        <activity android:name=".MapActivity" android:label="Map Activity" />
+        <activity
+            android:name=".GeoSearchActivity"
+            android:label="Map Activity">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".GeoSearchResultActivity" />
+        </activity>
 
-        <activity android:name=".GeoSearchActivity">
+        <activity android:name=".GeoSearchResultActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -56,6 +62,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
     </application>
 
 </manifest>
