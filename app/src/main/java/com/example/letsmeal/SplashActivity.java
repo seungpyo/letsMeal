@@ -7,11 +7,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.letsmeal.dummy.Schedule;
+import com.example.letsmeal.dummy.User;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,19 +68,26 @@ public class SplashActivity extends Activity {
                 public void run() {
                     String uid = pref.getString("uid", null);
                     if (uid == null) {
-                        Log.d(TAG, "uid stored in SharedPreference is ull");
+                        Log.d(TAG, "uid stored in SharedPreference is null");
                     }
-
-                    Intent MainActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
-                    MainActivityIntent.putExtra("uid", uid);
-                    startActivity(new Intent(MainActivityIntent));
-                    finish();
+                    String name = pref.getString("name", null);
+                    if (name == null) {
+                        Log.d(TAG, "name stored in SharedPreference is null");
+                    }
+                    launchMainActivity(new User(uid, name));
                 }
             }, SPLASH_TIME_OUT);
 
         }
 
         // startActivity(new Intent(this, MainActivity.class));
+    }
+
+    private void launchMainActivity(User me) {
+        Intent MainActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
+        MainActivityIntent.putExtra("me", me);
+        startActivity(new Intent(MainActivityIntent));
+        finish();
     }
 
     @Override
@@ -81,14 +101,48 @@ public class SplashActivity extends Activity {
                 Log.d(TAG, "Log in Success");
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 editor.putBoolean("signInRequired", false);
-                editor.putString("uid", user.getUid());
+                final User me = new User(user.getUid(), user.getDisplayName());
+
+                editor.putString("uid", me.getUid());
+                editor.putString("name", me.getName());
                 editor.commit();
 
-                Intent mainActivityIntent = new Intent(this, MainActivity.class);
-                Log.d(TAG, "UID put as " + user.getUid());
-                mainActivityIntent.putExtra("uid", user.getUid());
-                startActivity(mainActivityIntent);
-                finish();
+                FirebaseFirestore db =
+                        FirebaseFirestore.getInstance();
+                final DocumentReference docRef =
+                        db.collection(getString(R.string.firestore_user_collection)).document(me.getUid());
+                docRef.get().
+                        addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Log.d(TAG, "I already exist in User DB");
+                                        launchMainActivity(me);
+                                    } else {
+                                        docRef.set(me)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "User DB insertion success");
+                                                        launchMainActivity(me);
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "User DB insertion failed with: ", e);
+                                                    }
+                                                });
+                                    }
+
+                                } else {
+                                    Log.d(TAG, "User DB txn failed with" + task.getException());
+                                }
+                            }
+                        });
+
             } else {
                 // User canceled the sign-in flow using the back button.
                 if (response == null) {

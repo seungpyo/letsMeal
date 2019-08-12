@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.letsmeal.dummy.User;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,7 +66,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.time.setText(item.getTime());
         holder.place.setText(item.getPlace());
         // toString() is just a quick fix. Maybe we should change View type of participants.
-        holder.participants.setText(item.getParticipants().toString());
+        // holder.participants.setText(item.getParticipants().toString());
+        String participantsDisplay = "";
+        for (User participant : item.getParticipants()) {
+            participantsDisplay += participant.getName();
+            participantsDisplay += ", ";
+        }
+        holder.participants.setText(participantsDisplay);
         holder.description.setText(item.getDescription());
 
         holder.cardview.setOnClickListener(new View.OnClickListener() {

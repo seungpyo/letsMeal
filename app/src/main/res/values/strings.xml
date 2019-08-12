@@ -19,5 +19,7 @@
     <string name="facebook_application_id" translatable="false">letsMealID</string>
     <string name="facebook_login_protocol_scheme" translatable="false">letsMealPW</string>
 
+    <string name="open">drawer open</string>
+    <string name="close">drawer close</string>
 
 </resources>

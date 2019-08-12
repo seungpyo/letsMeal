@@ -1,6 +1,7 @@
 package com.example.letsmeal;
 
 import com.example.letsmeal.dummy.Schedule;
+import com.example.letsmeal.dummy.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,11 +14,13 @@ public class ItemCard implements Comparable<ItemCard> {
     String date;
     String time;
     String place;
-    ArrayList<String> participants; // A list of participants are marshaled into a single String
+    ArrayList<User> participants; // A list of participants are marshaled into a single String
     String description;
 
     Calendar calendar;
     long timestamp;
+
+    // TODO: add delete interface so user can delete a schedule and the item card.
 
     ItemCard(Schedule schedule) {
         this.title = schedule.getTitle();
@@ -26,6 +29,7 @@ public class ItemCard implements Comparable<ItemCard> {
         this.time = Schedule.getTimeString(this.calendar);
         this.timestamp = this.calendar.getTimeInMillis();
         this.place = schedule.getPlace();
+        // TODO: display participants in the item card.
         this.participants = schedule.getParticipants();
         this.description = schedule.getDescription();
    }
@@ -45,10 +49,10 @@ public class ItemCard implements Comparable<ItemCard> {
     public void setPlace(String place) {
         this.place = place;
     }
-    public ArrayList<String> getParticipants() {
+    public ArrayList<User> getParticipants() {
         return participants;
     }
-    public void setParticipants(ArrayList<String> participants) {
+    public void setParticipants(ArrayList<User> participants) {
         this.participants = participants;
     }
     public String getDescription() {
@@ -73,4 +77,7 @@ public class ItemCard implements Comparable<ItemCard> {
         else
             return 0;
     }
+
+
+
 }
